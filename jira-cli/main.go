@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 )
 
 type issue struct {
@@ -42,21 +43,13 @@ func openbrowser(url string) {
 	}
 }
 
-func main() {
-
-	args := os.Args
-
-	if len(args) < 2 {
-		log.Fatal("Missing Arguments")
-		os.Exit(1)
-	}
-
+func jiraSearch(args []string) {
 	jiraDomain := os.Getenv("JIRA_DOMAIN")
 	username := os.Getenv("JIRA_API_USER")
 	apikey := os.Getenv("JIRA_API_KEY")
 	base64Auth := "Basic " + base64.StdEncoding.EncodeToString([]byte(username + ":" + apikey))
 
-	queryUrl := jiraDomain + "/rest/api/3/issue/picker?query=" + os.Args[1]
+	queryUrl := jiraDomain + "/rest/api/3/issue/picker?query=" + strings.Join(args, "%20")
 
 	client := http.Client{}
 	req, err := http.NewRequest("GET", queryUrl, nil)
@@ -64,35 +57,54 @@ func main() {
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
 	resp, err := client.Do(req)
-
 	if err != nil || resp.StatusCode != 200 {
 		fmt.Println("Error Occured: ", resp.StatusCode)
 		os.Exit(1)
 	}
 
 	defer resp.Body.Close()
+
 	var issuePickerResp issuePickerResp
 	err = json.NewDecoder(resp.Body).Decode(&issuePickerResp)
 
-	issues := issuePickerResp.Sections[0].Issues
-	len := len(issues)
-	if len > 5 {
-		len = 5
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	if len > 1 {
-		for i := 0; i < len; i++ {
+	issues := issuePickerResp.Sections[0].Issues
+	issueLen := len(issues)
+	if issueLen > 5 {
+		issueLen = 5
+	}
+
+	if issueLen > 1 {
+		for i := 0; i < issueLen; i++ {
 			fmt.Println("______________________________________________")
 			issue := issues[i]
 			fmt.Println(issue.SummaryText)
-			jiraLink := jiraDomain + "/browse/" + issue.Key
+			jiraLink := getJiraLink(issue.Key)
 			fmt.Println(termlink.ColorLink(issue.Key, jiraLink, "red"))
-
 		}
-	} else if len == 0 {
-		fmt.Println("No related issues found")
+	} else if issueLen == 1 {
+		openbrowser(getJiraLink(issues[0].Key))
 	} else {
-		openbrowser(jiraDomain + "/browse/" + issues[0].Key)
+		fmt.Println("No related issues found")
 	}
+}
+
+func getJiraLink(issueKey string) string{
+	jiraLink := os.Getenv("JIRA_DOMAIN") + "/browse/" + issueKey
+	return jiraLink
+}
+
+func main() {
+
+	args := os.Args
+
+	if len(args) < 2 {
+		log.Fatal("Missing Arguments")
+	}
+
+	jiraSearch(args[1:])
 
 }
