@@ -98,7 +98,6 @@ func getJiraLink(issueKey string) string{
 }
 
 func main() {
-
 	args := os.Args
 
 	if len(args) < 2 {
