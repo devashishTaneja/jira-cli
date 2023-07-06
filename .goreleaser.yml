@@ -1,0 +1,32 @@
+builds:
+  - binary: jira
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -mod=vendor
+
+release:
+  prerelease: auto
+
+universal_binaries:
+  - replace: true
+
+brews:
+  -
+    name: jira
+    homepage: https://github.com/devashishTaneja/jira-cli
+    tap:
+      owner: https://github.com/devashishTaneja
+      name: homebrew-devashishTaneja
+    commit_author:
+      name: devashishTaneja
+      email: dtanejaxyz@gmail.com
+
+checksum:
+  name_template: 'checksums.txt'

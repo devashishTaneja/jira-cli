@@ -1,4 +1,4 @@
-module jira-cli
+module github.com/devashishTaneja/jira-cli
 
 go 1.20
 
