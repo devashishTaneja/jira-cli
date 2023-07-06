@@ -22,7 +22,7 @@ brews:
     name: jira
     homepage: https://github.com/devashishTaneja/jira-cli
     tap:
-      owner: https://github.com/devashishTaneja
+      owner: devashishTaneja
       name: homebrew-devashishTaneja
     commit_author:
       name: devashishTaneja

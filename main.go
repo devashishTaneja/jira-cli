@@ -105,5 +105,4 @@ func main() {
 	}
 
 	jiraSearch(args[1:])
-
 }
