@@ -2,11 +2,16 @@
 
 ### Command Line Interface for Atlassian JIRA
 
-<img src="./img/jira.gif">
-
-### Features
-1. [x] JIRA search
-2. [x] JIRA navigation
+### Features <br />
+1. [x] Quick Search <br /> <br />
+   <img src="./img/quick_search.gif" alt="">
+   <br />
+2. [x] Advanced Search <br /> <br />
+   <img src="./img/jql_search.gif">
+   <br />
+3. [x] My Issues Search <br /> <br />
+   <img src="./img/my_issues.gif">
+   <br />
 
 ### Installation
 ```shell
@@ -19,8 +24,8 @@ echo -ne '\nexport JIRA_DOMAIN=https://domain.atlassian.net' >> ~/.zshrc
 echo -ne '\nexport JIRA_API_USER=username' >> ~/.zshrc
 echo -ne '\nexport JIRA_API_KEY=apikey' >> ~/.zshrc
 
-
-jira-cli < search query here :) >
+# Now the fun part, go ahead and start using CLI :)
+jira-cli
 
 ```
 
